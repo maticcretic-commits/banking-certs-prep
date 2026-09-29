@@ -127,6 +127,15 @@ footer .honest{background:rgba(180,83,9,.1);border:1px solid #b45309;border-radi
   .hero h2{font-size:1.35rem}
   .vid-title{min-height:0}
 }
+
+.reg-banner{background:linear-gradient(135deg,rgba(180,83,9,.20),rgba(180,83,9,.05));border:1px solid #b45309;border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.reg-title{font-size:1.05rem;font-weight:800}
+.reg-timer{font-size:1.7rem;font-weight:800;letter-spacing:.5px;margin:8px 0;color:#f3c48a;font-variant-numeric:tabular-nums}
+.reg-note{margin:6px 0 0;font-size:.88rem;color:var(--muted)}
+.reg-note b{color:var(--text)}
+.reg-facts{margin:10px 0 0;padding-left:20px;font-size:.88rem;color:var(--muted)}
+.reg-facts li{margin:3px 0}
+
 </style>
 </head>
 <body>
@@ -254,6 +263,49 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
     }
   }
 
+  var CAIIB_REG_HTML =
+    '<section class="block" id="caiib-reg">' +
+    '<div class="reg-banner">' +
+    '<div class="reg-title">\u23F3 CAIIB Nov\u2013Dec 2026 \u2014 registration closing soon</div>' +
+    '<div class="reg-timer" id="caiib-cd">Loading\u2026</div>' +
+    '<p class="reg-note">Registrations reportedly close <b>1 Oct 2026</b> \u2014 confirm the exact cutoff on ' +
+    '<a href="https://www.iibf.org.in" target="_blank" rel="noopener">iibf.org.in</a> before paying. ' +
+    'Late-fee windows add \u20B9100, then \u20B9200.</p>' +
+    '</div>' +
+    '<details class="chapter">' +
+    '<summary><span class="ch-num">\u2713</span> IIBF CAIIB application checklist \u2014 step by step</summary>' +
+    '<div class="ch-body"><ol>' +
+    '<li>Go to <a href="https://www.iibf.org.in" target="_blank" rel="noopener">iibf.org.in</a> \u2192 \u201CApply for exams online\u201D \u2192 <b>Members</b>.</li>' +
+    '<li>Read the exam rules, syllabus, eligibility and the \u201Cinstructions to applicants\u201D carefully.</li>' +
+    '<li>Select the <b>CAIIB</b> examination.</li>' +
+    '<li>Log in with your IIBF membership number and password. Eligibility: JAIIB (or Part-I of the Associate Exam) qualified, IIBF member, subscription not in arrears.</li>' +
+    '<li>Fill in medium, exam centre and mode, and choose <b>one</b> elective: Risk Management, Central Banking, Rural Banking, Human Resources Management, or IT &amp; Digital Banking.</li>' +
+    '<li>Click <b>Preview</b> and verify every entry before proceeding.</li>' +
+    '<li>Click <b>Accept &amp; Submit</b> and pay online: first attempt \u20B95,000 + GST; subsequent attempts \u20B91,300 + GST (late windows add \u20B9100, then \u20B9200).</li>' +
+    '<li>After payment, wait for the server confirmation \u2014 do <b>not</b> double-click Submit, and do <b>not</b> press Back or Refresh.</li>' +
+    '<li>Save or print the \u201CTransaction Details\u201D screen. Confirmation is sent to your registered mobile number and email.</li>' +
+    '</ol>' +
+    '<ul class="reg-facts">' +
+    '<li><b>Dec 2026 papers:</b> ABM \u2013 6 Dec; BFM \u2013 12 Dec; ABFM \u2013 13 Dec; BRBL \u2013 20 Dec; electives \u2013 27 Dec.</li>' +
+    '<li>100 marks per paper, <b>no negative marking</b> \u2014 attempt every question.</li>' +
+    '<li><b>Pass:</b> 50/100 in each paper, or minimum 45 in each paper with 50% aggregate in a single attempt.</li>' +
+    '<li><b>Time limit:</b> 5 attempts within 3 years of registration, whichever ends first.</li>' +
+    '</ul></div></details></section>';
+
+  var CAIIB_REG_DEADLINE = new Date("2026-10-01T23:59:59+05:30").getTime();
+  function tickCaiibCd() {
+    var el = document.getElementById("caiib-cd");
+    if (!el) return;
+    var diff = CAIIB_REG_DEADLINE - Date.now();
+    if (diff <= 0) {
+      el.textContent = "Registration window has closed \u2014 check iibf.org.in for the next cycle.";
+      return;
+    }
+    var d = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24,
+        m = Math.floor(diff / 6e4) % 60, s = Math.floor(diff / 1e3) % 60;
+    el.textContent = d + "d " + h + "h " + m + "m " + s + "s left";
+  }
+
   /* ---------------- per-cert content ---------------- */
   function renderCert(id) {
     var c = CERTS[id];
@@ -273,6 +325,7 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
       stat(units.length, id === "other-certs" ? "sections" : "chapters") +
       stat(c.mcqs.length, "MCQs") + stat(c.oneLiners.length, "one-liners") +
       stat(c.capsules.length, "capsules") + stat(c.videos.length, "videos") + "</div></section>";
+    if (id === "caiib") { html += CAIIB_REG_HTML; }
 
     // chapters
     html += '<section class="block" id="chapters-' + id + '"><h3 class="block-title">Study chapters</h3>';
@@ -591,6 +644,8 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
     buildTabs();
     document.documentElement.style.setProperty("--accent", CERTS[active].accent);
     renderCert(active);
+    tickCaiibCd();
+    setInterval(tickCaiibCd, 1000);
     renderVideos();
     renderResources();
     renderCapsules(null);
