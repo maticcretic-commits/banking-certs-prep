@@ -381,11 +381,11 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
   var CAIIB_REG_HTML =
     '<section class="block" id="caiib-reg">' +
     '<div class="reg-banner">' +
-    '<div class="reg-title">\u23F3 CAIIB Nov\u2013Dec 2026 \u2014 registration closing soon</div>' +
+    '<div class="reg-title">\u23F3 CAIIB Nov\u2013Dec 2026 \u2014 Paper I (ABM) on 6 Dec 2026</div>' +
     '<div class="reg-timer" id="caiib-cd">Loading\u2026</div>' +
-    '<p class="reg-note">Registrations reportedly close <b>1 Oct 2026</b> \u2014 confirm the exact cutoff on ' +
-    '<a href="https://www.iibf.org.in" target="_blank" rel="noopener">iibf.org.in</a> before paying. ' +
-    'Late-fee windows add \u20B9100, then \u20B9200.</p>' +
+    '<p class="reg-note">Countdown to <b>Paper I \u2013 Advanced Bank Management, 6 Dec 2026</b>. Full paper-wise schedule is in the checklist below. Dates per IIBF\u2019s Nov\u2013Dec 2026 session \u2014 reconfirm on ' +
+    '<a href="https://www.iibf.org.in" target="_blank" rel="noopener">iibf.org.in</a>. ' +
+    'Registration for this cycle ran 13 Sep \u2013 1 Oct 2026 (late slabs +\u20B9100, +\u20B9200).</p>' +
     '</div>' +
     '<details class="chapter">' +
     '<summary><span class="ch-num">\u2713</span> IIBF CAIIB application checklist \u2014 step by step</summary>' +
@@ -401,19 +401,20 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
     '<li>Save or print the \u201CTransaction Details\u201D screen. Confirmation is sent to your registered mobile number and email.</li>' +
     '</ol>' +
     '<ul class="reg-facts">' +
+    '<li><b>Registration (this cycle):</b> 13 Sep \u2013 1 Oct 2026; late slabs +\u20B9100 (from 20 Sep), +\u20B9200 (from 27 Sep).</li>' +
     '<li><b>Dec 2026 papers:</b> ABM \u2013 6 Dec; BFM \u2013 12 Dec; ABFM \u2013 13 Dec; BRBL \u2013 20 Dec; electives \u2013 27 Dec.</li>' +
     '<li>100 marks per paper, <b>no negative marking</b> \u2014 attempt every question.</li>' +
     '<li><b>Pass:</b> 50/100 in each paper, or minimum 45 in each paper with 50% aggregate in a single attempt.</li>' +
     '<li><b>Time limit:</b> 5 attempts within 3 years of registration, whichever ends first.</li>' +
     '</ul></div></details></section>';
 
-  var CAIIB_REG_DEADLINE = new Date("2026-10-01T23:59:59+05:30").getTime();
+  var CAIIB_EXAM_START = new Date("2026-12-06T00:00:00+05:30").getTime();
   function tickCaiibCd() {
     var el = document.getElementById("caiib-cd");
     if (!el) return;
-    var diff = CAIIB_REG_DEADLINE - Date.now();
+    var diff = CAIIB_EXAM_START - Date.now();
     if (diff <= 0) {
-      el.textContent = "Registration window has closed \u2014 check iibf.org.in for the next cycle.";
+      el.textContent = "The Dec 2026 papers are underway \u2014 all the best! Admit cards & results on iibf.org.in.";
       return;
     }
     var d = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24,
