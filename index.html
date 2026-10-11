@@ -320,6 +320,38 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
   "use strict";
   var CERTS = window.BANKING_CERTS;
   var ORDER = ["jaiib", "caiib", "dbf", "aml-kyc", "cisb", "other-certs"];
+
+  /* ---- integrated all-in-one course (Nitesh 2026-10-11): merges every cert at runtime ---- */
+  (function () {
+    var ids = ["jaiib", "caiib", "dbf", "aml-kyc", "cisb", "other-certs"];
+    var chapters = [], mcqs = [], oneLiners = [], capsules = [], videos = [];
+    ids.forEach(function (id) {
+      var c = CERTS[id]; if (!c) return;
+      var tag = c.name;
+      (c.chapters || []).forEach(function (x) { chapters.push({ title: "[" + tag + "] " + x.title, body: x.body }); });
+      (c.sections || []).forEach(function (x) { chapters.push({ title: "[" + tag + "] " + (x.cert || x.title), body: x.body }); });
+      (c.mcqs || []).forEach(function (m) {
+        var nm = {}; for (var k in m) nm[k] = m[k];
+        if (!nm.cert) nm.cert = tag;
+        mcqs.push(nm);
+      });
+      (c.oneLiners || []).forEach(function (o) {
+        if (typeof o === "string") oneLiners.push({ text: o, cert: tag });
+        else oneLiners.push(o.cert ? o : { text: (o.text || ""), cert: tag });
+      });
+      (c.capsules || []).forEach(function (x) { capsules.push(x); });
+      (c.videos || []).forEach(function (v) { videos.push(v); });
+    });
+    CERTS["all"] = {
+      id: "all",
+      name: "Complete IIBF Course",
+      tagline: "JAIIB \u2022 CAIIB \u2022 DBF \u2022 AML/KYC \u2022 CISB \u2014 every chapter, MCQ, one-liner and capsule in one integrated course",
+      accent: "#f59e0b",
+      papers: ids.map(function (id) { return CERTS[id] ? CERTS[id].name : id; }),
+      chapters: chapters, mcqs: mcqs, oneLiners: oneLiners, capsules: capsules, videos: videos
+    };
+    ORDER.unshift("all");
+  })();
   var SITE_VIDEOS = window.SITE_VIDEOS;
   var SITE_RESOURCES = window.SITE_RESOURCES;
   var SITE_CAPSULES = window.SITE_CAPSULES;
@@ -621,6 +653,7 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
   var INDEX = [];
   function buildIndex() {
     ORDER.forEach(function (id) {
+      if (id === "all") return; /* merged view: index source certs only */
       unitsOf(id).forEach(function (u, i) {
         INDEX.push({ type: "chapter", cert: id, idx: i, title: u.title, text: u.title + " " + stripHtml(u.body) });
       });
@@ -766,6 +799,7 @@ window.SITE_CAPSULES = {"certs":{"jaiib":{"id":"jaiib","name":"JAIIB","tagline":
     renderCapsules(null);
     var sel = document.getElementById("capfilter");
     ORDER.forEach(function (id) {
+      if (id === "all") return;
       var o = document.createElement("option");
       o.value = id; o.textContent = CERTS[id].name;
       sel.appendChild(o);
